@@ -3,17 +3,28 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, grupos):
         super().__init__(grupos)
-        self.image = pygame.Surface((50, 50))
-        self.image.fill('green')
+
+        #sprites
+        self.importar_sprites()
+        self.image = self.animacao[0]
         self.rect = self.image.get_rect(center = pos)
 
+        #relacionado a movimentação
         self.pos = pygame.math.Vector2(self.rect.center)
         self.direction = pygame.math.Vector2()
         self.velocidade = 200
 
+    #importa o caminho das sprites (não consegui totalmente ainda)
+    def importar_sprites(self):
+        caminho = 'sprites/player/down/'
+        self.animacao = []
+
+        for frame in range(4):
+            superf = pygame.image.load(f'{caminho}{frame}.png').convert_alpha()
+            self.animacao.append(superf)
 
     def movimentacao(self, dt):
-        #p/ evitar o bug da movimentação na diagonal ser mais rápida que as outras
+        #p/ evitar o "bug" da movimentação na diagonal ser mais rápida que as outras
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
         
@@ -21,7 +32,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (round(self.pos.x), round(self.pos.y))
 
 
-    def teclasMovimentacao(self):
+    def teclas_movimentação(self):
         teclas = pygame.key.get_pressed()
 
         #teclas p/ movimentação no eixo y
@@ -42,5 +53,5 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self, dt):
-        self.teclasMovimentacao()
+        self.teclas_movimentação()
         self.movimentacao(dt)
