@@ -1,5 +1,6 @@
 import pygame, sys 
 from configs import *
+from random import choice
 from carros import Carro
 from player import Player
 
@@ -17,11 +18,11 @@ class TodaSprites(pygame.sprite.Group):
 		self.deslocamento.x = player.rect.centerx - largura / 2
 		self.deslocamento.y = player.rect.centery - altura / 2
 		
-		#desenho do fundo na tela, utilizando o deslocamento como coordenada
+		#desenho do fundo na tela(mapa), utilizando o deslocamento como coordenada
 		tela.blit(self.fundo, -self.deslocamento)
 
 		for sprite in self.sprites():
-			pos_deslocamento = sprite.rect.topleft + self.deslocamento
+			pos_deslocamento = sprite.rect.topleft - self.deslocamento
 			tela.blit(sprite.image, pos_deslocamento)
 
 		tela.blit(self.sobrepos, -self.deslocamento)
@@ -30,6 +31,7 @@ class TodaSprites(pygame.sprite.Group):
 pygame.init()
 
 tela = pygame.display.set_mode((largura, altura))
+pygame.display.set_caption('Joguinho by Joel')
 clock = pygame.time.Clock()
 
 #grupos
@@ -37,7 +39,11 @@ todas_sprites = TodaSprites()
 
 #sprites
 player = Player((600, 400), todas_sprites)
-carro = Carro((600, 200), todas_sprites)
+
+#cronômetro
+cronometro_carro = pygame.event.custom_type()
+pygame.time.set_timer(cronometro_carro, 50)
+lista_pos = []
 
 #loop do jogo
 while True:
@@ -47,6 +53,17 @@ while True:
 		if event.type == pygame.QUIT:
 			pygame.quit()
 			sys.exit()
+
+		#implementa os carros no jogo de forma aleatória
+		if event.type == cronometro_carro:
+			pos_aleatoria = choice(POSICOES_INICIAIS_CARROS)
+			
+			if pos_aleatoria not in lista_pos:
+				lista_pos.append(pos_aleatoria)
+				Carro(pos_aleatoria, todas_sprites)
+			
+			if len(lista_pos) >= 5:
+				del lista_pos[0]
 
 	#'delta tempo': 
 	dt = clock.tick() / 1000
