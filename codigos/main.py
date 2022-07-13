@@ -12,6 +12,7 @@ class TodaSprites(pygame.sprite.Group):
 		self.fundo = pygame.image.load('sprites/main/map.png').convert()
 		self.sobrepos = pygame.image.load('sprites/main/overlay.png').convert_alpha()
 
+
 	def draw_customizado(self):
 
 		#atribuindo a posição do personagem (cada eixo de seu retângulo) ao vetor de deslocamento
@@ -27,22 +28,24 @@ class TodaSprites(pygame.sprite.Group):
 
 		tela.blit(self.sobrepos, -self.deslocamento)
 
+
 #configs basicas		
 pygame.init()
 
 tela = pygame.display.set_mode((largura, altura))
-pygame.display.set_caption('Joguinho by Joel')
+pygame.display.set_caption('JF Run') #Joel Filho Run* (eu sou péssimo com nomes)
 clock = pygame.time.Clock()
 
 #grupos
 todas_sprites = TodaSprites()
+obstaculos_sprites = pygame.sprite.Group()
 
 #sprites
-player = Player((600, 400), todas_sprites)
+player = Player((2062,3274), todas_sprites, obstaculos_sprites)
 
 #cronômetro
 cronometro_carro = pygame.event.custom_type()
-pygame.time.set_timer(cronometro_carro, 50)
+pygame.time.set_timer(cronometro_carro, 70)
 lista_pos = []
 
 #loop do jogo
@@ -60,7 +63,7 @@ while True:
 			
 			if pos_aleatoria not in lista_pos:
 				lista_pos.append(pos_aleatoria)
-				Carro(pos_aleatoria, todas_sprites)
+				Carro(pos_aleatoria, [todas_sprites, obstaculos_sprites])
 			
 			if len(lista_pos) >= 5:
 				del lista_pos[0]

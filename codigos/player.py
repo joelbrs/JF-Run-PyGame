@@ -1,7 +1,7 @@
-import pygame
+import pygame,sys
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, grupos):
+    def __init__(self, pos, grupos, sprites_colisao):
         super().__init__(grupos)
 
         #sprites
@@ -14,6 +14,41 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.velocidade = 200
 
+        #colisoes
+        self.sprites_colisao = sprites_colisao
+
+    
+    def colisao(self, direcao):
+        #pygame.sprite.spritecollide(self, self.sprites_colisao, True)
+
+        #checando a direção no eixo x e y, de acordo com o que está escrito no método de movimentação (abaixo)
+        if direcao == 'horizontal':
+            for sprite in self.sprites_colisao.sprites():
+                if sprite.rect.colliderect(self.rect):
+                    if hasattr(sprite, 'nome') and sprite.nome == 'carro': #checa se a colisão foi com a sprite do carro (se sim, game over)
+                        pygame.quit()
+                        sys.exit()
+                    if self.direction.x > 0:
+                        self.rect.right = sprite.rect.left
+                        self.pos.x = self.rect.centerx
+                    if self.direction.x < 0:
+                        self.rect.left = sprite.rect.right
+                        self.pos.x = self.rect.centerx
+        else:
+            if direcao == 'vertical':
+                for sprite in self.sprites_colisao.sprites():
+                    if sprite.rect.colliderect(self.rect):
+                        if hasattr(sprite, 'nome') and sprite.nome == 'carro': #checa se a colisão foi com a sprite do carro (se sim, game over)
+                            pygame.quit()
+                            sys.exit()
+                        if self.direction.y > 0:
+                            self.rect.bottom = sprite.rect.top
+                            self.pos.y = self.rect.centery
+                        if self.direction.y < 0:
+                            self.rect.top = sprite.rect.bottom
+                            self.pos.y = self.rect.centery
+                            
+
     #importa o caminho das sprites (não consegui totalmente ainda)
     def importar_sprites(self):
         caminho = 'sprites/player/down/'
@@ -23,13 +58,21 @@ class Player(pygame.sprite.Sprite):
             superf = pygame.image.load(f'{caminho}{frame}.png').convert_alpha()
             self.animacao.append(superf)
 
+
     def movimentacao(self, dt):
         #p/ evitar o "bug" da movimentação na diagonal ser mais rápida que as outras
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
         
-        self.pos += self.direction * self.velocidade * dt     
-        self.rect.center = (round(self.pos.x), round(self.pos.y))
+        #horizontal
+        self.pos.x += self.direction.x * self.velocidade * dt     
+        self.rect.centerx = (round(self.pos.x))
+        self.colisao('horizontal')
+
+        #vertical
+        self.pos.y += self.direction.y * self.velocidade * dt     
+        self.rect.centery = (round(self.pos.y))
+        self.colisao('vertical')
 
 
     def teclas_movimentação(self):
@@ -51,6 +94,10 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x = 0
 
+
+    def restringir_movimento(self):
+        if self.rect.left < 640:
+            self.pos.x = 640 + self.rect.width / 2
 
     def update(self, dt):
         self.teclas_movimentação()
