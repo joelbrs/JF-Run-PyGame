@@ -6,7 +6,7 @@ class Carro(pygame.sprite.Sprite):
     def __init__(self, pos, grupos):
         super().__init__(grupos)
 
-        #pegar o caminho das sprites 
+        #pegar as sprites dos carros de forma aleatória 
         for _, _, lista_imgs in walk('sprites/carros/'):
             carro = choice(lista_imgs)
 
@@ -29,5 +29,6 @@ class Carro(pygame.sprite.Sprite):
         self.pos += self.direction * self.velocidade * dt   
         self.rect.center = (round(self.pos.x), round(self.pos.y))
 
+        #caso o carro saia do alcance do mapa em até 200px (direita ou esquerda), a sprite desaparece
         if not -200 < self.rect.x < 3400:
             self.kill()
