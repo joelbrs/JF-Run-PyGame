@@ -1,14 +1,19 @@
 import pygame,sys
-from configs import largura, altura
+from configs import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, grupos, sprites_colisao):
+        #super().__init__(grupos)
+        self.reset(pos, grupos, sprites_colisao)
+    
+    
+    def reset(self, pos, grupos, sprites_colisao):
         super().__init__(grupos)
-
         #sprites
         self.importar_sprites()
         self.image = self.animacao[0]
         self.rect = self.image.get_rect(center = pos)
+        self.grupos = grupos
 
         #relacionado a movimentação
         self.pos = pygame.math.Vector2(self.rect.center)
@@ -17,7 +22,14 @@ class Player(pygame.sprite.Sprite):
 
         #colisoes
         self.sprites_colisao = sprites_colisao
-        
+
+        #game over
+        self.game_over = 0
+        self.fonte = pygame.font.Font(None, 50)
+        self.texto_go = self.fonte.render('Vacilou feio, vacilou rude!', True, 'White')
+        self.texto_go_retang = self.texto_go.get_rect(center = (largura / 2, altura /2 - 40))
+
+
     def colisao(self, direcao):
         #pygame.sprite.spritecollide(self, self.sprites_colisao, True)
 
@@ -26,8 +38,9 @@ class Player(pygame.sprite.Sprite):
             for sprite in self.sprites_colisao.sprites():
                 if sprite.rect.colliderect(self.rect):
                     if hasattr(sprite, 'nome') and sprite.nome == 'carro': #checa se a colisão foi com a sprite do carro (se sim, game over)
-                        pygame.quit()
-                        sys.exit()
+                        self.game_over = 1
+                        #pygame.quit()
+                        #sys.exit()
 
                     if self.direction.x > 0:
                         self.rect.right = sprite.rect.left
@@ -40,8 +53,9 @@ class Player(pygame.sprite.Sprite):
                 for sprite in self.sprites_colisao.sprites():
                     if sprite.rect.colliderect(self.rect):
                         if hasattr(sprite, 'nome') and sprite.nome == 'carro': #checa se a colisão foi com a sprite do carro (se sim, game over)
-                            pygame.quit()
-                            sys.exit()
+                            self.game_over = 1
+                            #pygame.quit()
+                            #sys.exit()
 
                         if self.direction.y > 0:
                             self.rect.bottom = sprite.rect.top
