@@ -1,4 +1,5 @@
 import pygame,sys
+from configs import largura, altura
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, grupos, sprites_colisao):
@@ -16,8 +17,7 @@ class Player(pygame.sprite.Sprite):
 
         #colisoes
         self.sprites_colisao = sprites_colisao
-
-    
+        
     def colisao(self, direcao):
         #pygame.sprite.spritecollide(self, self.sprites_colisao, True)
 
@@ -28,6 +28,7 @@ class Player(pygame.sprite.Sprite):
                     if hasattr(sprite, 'nome') and sprite.nome == 'carro': #checa se a colisão foi com a sprite do carro (se sim, game over)
                         pygame.quit()
                         sys.exit()
+
                     if self.direction.x > 0:
                         self.rect.right = sprite.rect.left
                         self.pos.x = self.rect.centerx
@@ -41,6 +42,7 @@ class Player(pygame.sprite.Sprite):
                         if hasattr(sprite, 'nome') and sprite.nome == 'carro': #checa se a colisão foi com a sprite do carro (se sim, game over)
                             pygame.quit()
                             sys.exit()
+
                         if self.direction.y > 0:
                             self.rect.bottom = sprite.rect.top
                             self.pos.y = self.rect.centery
