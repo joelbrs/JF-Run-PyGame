@@ -9,8 +9,8 @@ class TodaSprites(pygame.sprite.Group):
 	def __init__(self):
 		super().__init__()
 		self.deslocamento = pygame.math.Vector2()
-		self.fundo = pygame.image.load('sprites/main/map.png').convert()
-		self.sobrepos = pygame.image.load('sprites/main/overlay.png').convert_alpha()
+		self.fundo = pygame.image.load('sprites/main/mapa.png').convert()
+		self.sobrepos = pygame.image.load('sprites/main/sobreposicao.png').convert_alpha()
 
 
 	def draw_customizado(self):
@@ -36,19 +36,27 @@ tela = pygame.display.set_mode((largura, altura))
 pygame.display.set_caption('JF Run') #Joel Filho Run* (eu sou péssimo com nomes)
 clock = pygame.time.Clock()
 
+
 #grupos
 todas_sprites = TodaSprites()
 obstaculos_sprites = pygame.sprite.Group()
 
+
 #sprites
 player = Player((2062,3274), todas_sprites, obstaculos_sprites)
-vitoria = pygame.image.load('sprites/vitoria/vitoria.png')
-vitoria_retang = vitoria.get_rect(center = (largura / 2, altura /2))
+
+
+#textin de vitoria
+fonte = pygame.font.Font(None, 50)
+texto = fonte.render('Honrou o batalhão, meu lindo!', True, 'White')
+texto_retang = texto.get_rect(center = (largura / 2, altura /2 - 40))
+
 
 #cronômetro
 cronometro_carro = pygame.event.custom_type()
-pygame.time.set_timer(cronometro_carro, 100)
+pygame.time.set_timer(cronometro_carro, 50)
 lista_pos = []
+
 
 #loop do jogo
 while True:
@@ -81,7 +89,7 @@ while True:
 		#todas_sprites.draw(tela)	
 		todas_sprites.draw_customizado()
 	else:
-		tela.fill('salmon')
-		tela.blit(vitoria, vitoria_retang)
+		tela.fill('black')
+		tela.blit(texto, texto_retang)
 		
 	pygame.display.update()
