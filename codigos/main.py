@@ -42,10 +42,12 @@ obstaculos_sprites = pygame.sprite.Group()
 
 #sprites
 player = Player((2062,3274), todas_sprites, obstaculos_sprites)
+vitoria = pygame.image.load('sprites/vitoria/vitoria.png')
+vitoria_retang = vitoria.get_rect(center = (largura / 2, altura /2))
 
 #cronômetro
 cronometro_carro = pygame.event.custom_type()
-pygame.time.set_timer(cronometro_carro, 70)
+pygame.time.set_timer(cronometro_carro, 100)
 lista_pos = []
 
 #loop do jogo
@@ -73,9 +75,13 @@ while True:
 
 	tela.fill('black')
 
-	todas_sprites.update(dt)
+	if player.pos.y >= 1180:
+		todas_sprites.update(dt)
 
-	#todas_sprites.draw(tela)	
-	todas_sprites.draw_customizado()
-
+		#todas_sprites.draw(tela)	
+		todas_sprites.draw_customizado()
+	else:
+		tela.fill('salmon')
+		tela.blit(vitoria, vitoria_retang)
+		
 	pygame.display.update()

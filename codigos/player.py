@@ -47,7 +47,7 @@ class Player(pygame.sprite.Sprite):
                         if self.direction.y < 0:
                             self.rect.top = sprite.rect.bottom
                             self.pos.y = self.rect.centery
-                            
+
 
     #importa o caminho das sprites (não consegui totalmente ainda)
     def importar_sprites(self):
@@ -94,10 +94,6 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x = 0
 
-
-    def restringir_movimento(self):
-        if self.rect.left < 640:
-            self.pos.x = 640 + self.rect.width / 2
 
     def update(self, dt):
         self.teclas_movimentação()
