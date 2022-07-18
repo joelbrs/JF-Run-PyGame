@@ -64,3 +64,19 @@ class Botoes():
         tela.blit(self.image, self.rect)
 
         return self.acao
+
+
+class ItemBoost(pygame.sprite.Sprite):
+    def __init__(self,pos, grupos):
+        self.reset(pos, grupos)
+
+    def reset(self, pos, grupos):    
+        pygame.sprite.Sprite.__init__(self, grupos)
+        
+        self.nome = 'boost'
+        
+        self.image = pygame.image.load('sprites/objeto/boost.png')
+        
+        self.rect = self.image.get_rect(center = pos)
+
+

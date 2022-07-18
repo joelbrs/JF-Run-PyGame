@@ -1,13 +1,12 @@
-import pygame,sys
+import pygame
 from configs import *
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, grupos, sprites_colisao):
-        #super().__init__(grupos)
-        self.reset(pos, grupos, sprites_colisao)
+    def __init__(self, pos, grupos, sprites_carros, sprite_boost):
+        self.reset(pos, grupos, sprites_carros, sprite_boost)
     
     
-    def reset(self, pos, grupos, sprites_colisao):
+    def reset(self, pos, grupos, sprites_carros, sprite_boost):
         super().__init__(grupos)
         #sprites
         self.importar_sprites()
@@ -21,50 +20,51 @@ class Player(pygame.sprite.Sprite):
         self.velocidade = 200
 
         #colisoes
-        self.sprites_colisao = sprites_colisao
+        self.sprites_carros = sprites_carros
+        self.sprite_boost = sprite_boost
+
+        self.score = 0
 
         #game over
         self.game_over = 0
         self.fonte = pygame.font.Font(None, 50)
-        self.texto_go = self.fonte.render('Vacilou feio, vacilou rude!', True, 'White')
+        self.texto_go = self.fonte.render('Vacilou feio, meu patrão!', True, 'White')
         self.texto_go_retang = self.texto_go.get_rect(center = (largura / 2, altura /2 - 40))
 
 
     def colisao(self, direcao):
-        #pygame.sprite.spritecollide(self, self.sprites_colisao, True)
 
-        #checando a direção no eixo x e y, de acordo com o que está escrito no método de movimentação (abaixo)
         if direcao == 'horizontal':
-            for sprite in self.sprites_colisao.sprites():
-                if sprite.rect.colliderect(self.rect):
-                    if hasattr(sprite, 'nome') and sprite.nome == 'carro': #checa se a colisão foi com a sprite do carro (se sim, game over)
-                        self.game_over = 1
-                        #pygame.quit()
-                        #sys.exit()
-
-                    if self.direction.x > 0:
-                        self.rect.right = sprite.rect.left
-                        self.pos.x = self.rect.centerx
-                    if self.direction.x < 0:
-                        self.rect.left = sprite.rect.right
-                        self.pos.x = self.rect.centerx
+                    for sprite in self.sprites_carros.sprites():
+                        if sprite.rect.colliderect(self.rect):
+                            
+                            if self.direction.x > 0:
+                                self.rect.right = sprite.rect.left
+                                self.pos.x = self.rect.centerx
+                            if self.direction.x < 0:
+                                self.rect.left = sprite.rect.right
+                                self.pos.x = self.rect.centerx
         else:
-            if direcao == 'vertical':
-                for sprite in self.sprites_colisao.sprites():
-                    if sprite.rect.colliderect(self.rect):
-                        if hasattr(sprite, 'nome') and sprite.nome == 'carro': #checa se a colisão foi com a sprite do carro (se sim, game over)
-                            self.game_over = 1
-                            #pygame.quit()
-                            #sys.exit()
+                    if direcao == 'vertical':
+                        for sprite in self.sprites_carros.sprites():
+                            if sprite.rect.colliderect(self.rect):
+                                
+                                if self.direction.y > 0:
+                                    self.rect.bottom = sprite.rect.top
+                                    self.pos.y = self.rect.centery
+                                if self.direction.y < 0:
+                                    self.rect.top = sprite.rect.bottom
+                                    self.pos.y = self.rect.centery
+        
+        if pygame.sprite.spritecollide(self, self.sprites_carros, False):
+            self.game_over = 1
+            
 
-                        if self.direction.y > 0:
-                            self.rect.bottom = sprite.rect.top
-                            self.pos.y = self.rect.centery
-                        if self.direction.y < 0:
-                            self.rect.top = sprite.rect.bottom
-                            self.pos.y = self.rect.centery
-
-
+        if pygame.sprite.spritecollide(self, self.sprite_boost, True):
+               self.velocidade += 25
+               self.score += 1
+        
+        
     #importa o caminho das sprites (não consegui totalmente ainda)
     def importar_sprites(self):
         caminho = 'sprites/player/down/'
