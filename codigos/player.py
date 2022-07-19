@@ -22,6 +22,8 @@ class Player(pygame.sprite.Sprite):
         #colisoes
         self.sprites_carros = sprites_carros
         self.sprite_boost = sprite_boost
+        self.som_colisao_carro = pygame.mixer.Sound('musicas/colisao - (SUPER MARIO BROS).wav')
+        self.som_colisao_item = pygame.mixer.Sound('musicas/item(SUPER MARIO BROS).wav')
 
         self.score = 0
 
@@ -32,9 +34,9 @@ class Player(pygame.sprite.Sprite):
         self.texto_go_retang = self.texto_go.get_rect(center = (largura / 2, altura /2 - 40))
 
 
-    def colisao(self, direcao):
+    def colisao(self):
 
-        if direcao == 'horizontal':
+        '''if direcao == 'horizontal':
                     for sprite in self.sprites_carros.sprites():
                         if sprite.rect.colliderect(self.rect):
                             
@@ -54,15 +56,17 @@ class Player(pygame.sprite.Sprite):
                                     self.pos.y = self.rect.centery
                                 if self.direction.y < 0:
                                     self.rect.top = sprite.rect.bottom
-                                    self.pos.y = self.rect.centery
+                                    self.pos.y = self.rect.centery'''
         
         if pygame.sprite.spritecollide(self, self.sprites_carros, False):
             self.game_over = 1
+            self.som_colisao_carro.play()
             
 
         if pygame.sprite.spritecollide(self, self.sprite_boost, True):
                self.velocidade += 25
                self.score += 1
+               self.som_colisao_item.play()
         
         
     #importa o caminho das sprites (não consegui totalmente ainda)
@@ -83,12 +87,12 @@ class Player(pygame.sprite.Sprite):
         #horizontal
         self.pos.x += self.direction.x * self.velocidade * dt     
         self.rect.centerx = (round(self.pos.x))
-        self.colisao('horizontal')
+        self.colisao()
 
         #vertical
         self.pos.y += self.direction.y * self.velocidade * dt     
         self.rect.centery = (round(self.pos.y))
-        self.colisao('vertical')
+        self.colisao()
 
 
     def teclas_movimentação(self):
