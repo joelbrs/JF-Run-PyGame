@@ -9,8 +9,7 @@ class Player(pygame.sprite.Sprite):
     def reset(self, pos, grupos, sprites_carros, sprite_boost):
         super().__init__(grupos)
         #sprites
-        self.importar_sprites()
-        self.image = self.animacao[0]
+        self.image = pygame.image.load('sprites/player/down/0.png')
         self.rect = self.image.get_rect(center = pos)
         self.grupos = grupos
 
@@ -23,6 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.sprites_carros = sprites_carros
         self.sprite_boost = sprite_boost
         self.som_colisao_carro = pygame.mixer.Sound('musicas/colisao - (SUPER MARIO BROS).wav')
+        pygame.mixer.Sound.set_volume(self.som_colisao_carro, 0.15)
         self.som_colisao_item = pygame.mixer.Sound('musicas/item(SUPER MARIO BROS).wav')
 
         self.score = 0
@@ -34,29 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.texto_go_retang = self.texto_go.get_rect(center = (largura / 2, altura /2 - 40))
 
 
-    def colisao(self, direcao):
-
-        '''if direcao == 'horizontal':
-                    for sprite in self.sprites_carros.sprites():
-                        if sprite.rect.colliderect(self.rect):
-                            
-                            if self.direction.x > 0:
-                                self.rect.right = sprite.rect.left
-                                self.pos.x = self.rect.centerx
-                            if self.direction.x < 0:
-                                self.rect.left = sprite.rect.right
-                                self.pos.x = self.rect.centerx
-        else:
-                    if direcao == 'vertical':
-                        for sprite in self.sprites_carros.sprites():
-                            if sprite.rect.colliderect(self.rect):
-                                
-                                if self.direction.y > 0:
-                                    self.rect.bottom = sprite.rect.top
-                                    self.pos.y = self.rect.centery
-                                if self.direction.y < 0:
-                                    self.rect.top = sprite.rect.bottom
-                                    self.pos.y = self.rect.centery'''
+    def colisao(self):
         
         if pygame.sprite.spritecollide(self, self.sprites_carros, False):
             self.game_over = 1
@@ -64,20 +42,10 @@ class Player(pygame.sprite.Sprite):
         
 
         if pygame.sprite.spritecollide(self, self.sprite_boost, True):
-               self.velocidade += 25
+               self.velocidade += 15
                self.score += 1
                self.som_colisao_item.play()
         
-        
-    #importa o caminho das sprites (não consegui totalmente ainda)
-    def importar_sprites(self):
-        caminho = 'sprites/player/down/'
-        self.animacao = []
-
-        for frame in range(4):
-            superf = pygame.image.load(f'{caminho}{frame}.png').convert_alpha()
-            self.animacao.append(superf)
-
 
     def movimentacao(self, dt):
         #p/ evitar o "bug" da movimentação na diagonal ser mais rápida que as outras
@@ -87,12 +55,12 @@ class Player(pygame.sprite.Sprite):
         #horizontal
         self.pos.x += self.direction.x * self.velocidade * dt     
         self.rect.centerx = (round(self.pos.x))
-        self.colisao('horizontal')
+        self.colisao()
 
         #vertical
         self.pos.y += self.direction.y * self.velocidade * dt     
         self.rect.centery = (round(self.pos.y))
-        self.colisao('vertical')
+        self.colisao()
 
 
     def teclas_movimentação(self):
