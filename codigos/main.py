@@ -9,8 +9,7 @@ class TodaSprites(pygame.sprite.Group):
 	def __init__(self):
 		super().__init__()
 		self.deslocamento = pygame.math.Vector2()
-		self.fundo = pygame.image.load('sprites/main/mapa.png').convert()
-		self.sobrepos = pygame.image.load('sprites/main/sobreposicao.png').convert_alpha()
+		self.fundo = pygame.image.load('sprites/mapa/mapa.png').convert()
 
 	#onde eu realmente configurei a câmera 
 	def draw_customizado(self):
@@ -25,8 +24,6 @@ class TodaSprites(pygame.sprite.Group):
 		for sprite in self.sprites():
 			pos_deslocamento = sprite.rect.topleft - self.deslocamento
 			tela.blit(sprite.image, pos_deslocamento)
-
-		tela.blit(self.sobrepos, -self.deslocamento)
 
 
 #score
@@ -46,13 +43,13 @@ menu = True
 
 
 #musicas
-pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.set_volume(0.15)
 musica_fundo = pygame.mixer.music.load('musicas/principal -(UNDERTALE-Hotel).wav')
 pygame.mixer.music.play(-1)
 musica_game_over = pygame.mixer.Sound('musicas/game_over (SUPER MARIO BROS).wav')
 musica_vitoria = pygame.mixer.Sound('musicas/vitoria.wav')
-pygame.mixer.Sound.set_volume(musica_vitoria, 0.4)
-pygame.mixer.Sound.set_volume(musica_game_over, 0.5)
+pygame.mixer.Sound.set_volume(musica_vitoria, 0.15)
+pygame.mixer.Sound.set_volume(musica_game_over, 0.15)
 
 
 #grupos
@@ -62,8 +59,8 @@ item_boost = pygame.sprite.Group()
 
 
 #itens/player
-player = Player((2062,3274), todas_sprites, obstaculos_sprites, item_boost)
-boost = ItemBoost((2150, 3274), [todas_sprites, item_boost])
+player = Player((2452,3274), todas_sprites, obstaculos_sprites, item_boost)
+boost = ItemBoost((1856, 1856), [todas_sprites, item_boost])
 
 
 #botoes
@@ -146,7 +143,7 @@ while True:
 			
 			if botao_reiniciar.draw():
 				player.reset((2062,3274), todas_sprites, obstaculos_sprites, item_boost)
-				boost.reset((2150, 3274), [todas_sprites, item_boost])
+				boost.reset((1856, 1856), [todas_sprites, item_boost])
 				player.score = 0
 				player.game_over = 0
 				musica_game_over.stop()

@@ -7,9 +7,6 @@ class Carro(pygame.sprite.Sprite):
     def __init__(self, pos, grupos):   
         super().__init__(grupos)
 
-        #usado p/ condicao de colisao c/ o player (game over) --> ir p/ o arquivo player.py para entender
-        self.nome = 'carro'
-
         #pegar as sprites dos carros de forma aleatória 
         for _, _, lista_imgs in walk('sprites/carros/'):
             carro = choice(lista_imgs)
@@ -72,8 +69,6 @@ class ItemBoost(pygame.sprite.Sprite):
 
     def reset(self, pos, grupos):    
         pygame.sprite.Sprite.__init__(self, grupos)
-        
-        self.nome = 'boost'
         
         self.image = pygame.image.load('sprites/objeto/boost.png')
         

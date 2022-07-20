@@ -34,7 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.texto_go_retang = self.texto_go.get_rect(center = (largura / 2, altura /2 - 40))
 
 
-    def colisao(self):
+    def colisao(self, direcao):
 
         '''if direcao == 'horizontal':
                     for sprite in self.sprites_carros.sprites():
@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, self.sprites_carros, False):
             self.game_over = 1
             self.som_colisao_carro.play()
-            
+        
 
         if pygame.sprite.spritecollide(self, self.sprite_boost, True):
                self.velocidade += 25
@@ -87,12 +87,12 @@ class Player(pygame.sprite.Sprite):
         #horizontal
         self.pos.x += self.direction.x * self.velocidade * dt     
         self.rect.centerx = (round(self.pos.x))
-        self.colisao()
+        self.colisao('horizontal')
 
         #vertical
         self.pos.y += self.direction.y * self.velocidade * dt     
         self.rect.centery = (round(self.pos.y))
-        self.colisao()
+        self.colisao('vertical')
 
 
     def teclas_movimentação(self):
@@ -113,7 +113,7 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = -1
         else:
             self.direction.x = 0
-
+        
 
     def update(self, dt):
         self.teclas_movimentação()
