@@ -93,7 +93,6 @@ lista_pos = []
 
 #loop do jogo
 while True:
-	teclas= pygame.key.get_pressed()
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -101,23 +100,21 @@ while True:
 			sys.exit()
 
 		#implementa os carros no jogo de forma aleatória
-		if event.type == cronometro_carro and player.game_over == 0:
+		if event.type == cronometro_carro:
 			pos_aleatoria = choice(POSICOES_INICIAIS_CARROS)
 			
 			if pos_aleatoria not in lista_pos:
 				lista_pos.append(pos_aleatoria)
 				Carro(pos_aleatoria, [todas_sprites, obstaculos_sprites])
 					
-			if len(lista_pos) >= 7:
+			if len(lista_pos) >= 5:
 				del lista_pos[0]
-			
 
 	#'delta tempo': 
 	dt = clock.tick() / 1000
 	tela.fill('teal')
 
-
-	if menu == True:
+	if menu:
 
 		if botao_sair_menu.draw():
 			pygame.quit()
@@ -127,7 +124,7 @@ while True:
 		
 
 	else:	
-		if player.pos.y >= 1180 and player.game_over == 0:
+		if player.pos.y >= 1180 and player.game_over == 0:# and player.game_over == 0:
 			todas_sprites.update(dt)
 	
 			todas_sprites.draw_customizado()
